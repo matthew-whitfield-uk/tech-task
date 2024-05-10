@@ -1,4 +1,97 @@
-<p>payments-list works!</p>
+<div class="paymentListContainer">
+  <h1>Payments</h1>
 
+  @if(isError) {
 
-<app-payments-table [items]="tableItems"></app-payments-table>
+  <p class="error-message">{{ errorMessage }}</p>
+
+  } @else {
+  <div class="filters">
+    <mat-form-field appearance="outline" (click)="picker.open()">
+      <mat-label>Payment Dates</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input
+          matStartDate
+          readonly
+          placeholder="Start date"
+          (dateChange)="filterDate('createdAtStart', $event.value)"
+        />
+        <input
+          matEndDate
+          readonly
+          placeholder="End date"
+          (dateChange)="filterDate('createdAtEnd', $event.value)"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Transaction Status</mat-label>
+      <mat-select
+        (selectionChange)="
+          $event.value === ''
+            ? filterTransactionTypes()
+            : filterTransactionTypes($event.value)
+        "
+      >
+        <mat-option value="">All</mat-option>
+        <mat-option value="CAPTURED">Captured</mat-option>
+        <mat-option value="COMPLETED">Completed</mat-option>
+        <mat-option value="CREATED">Created</mat-option>
+        <mat-option value="FAILED">Failed</mat-option>
+        <mat-option value="SETTLED">Settled</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="paymentListTableContainer">
+    @if(isWaitingForAPI || isWaitingForMinimumSpinTime) {
+    <div class="loadingSpinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    }
+
+    <app-payments-table [tableItems]="tableItems"></app-payments-table>
+
+    <div class="navigationOptions">
+      <div class="navigationButton">
+        <!-- Page numbers start from 0 -->
+        @if(currentPage > 0) {
+        <button
+          mat-flat-button
+          (click)="filterOptions.page = currentPage - 1; getData(true)"
+          color="primary"
+        >
+          Back
+        </button>
+        }
+      </div>
+      <div>
+        @if (numberOfPages > 0) {
+        <!-- Page numbers start from 0 -->
+        <span>Page {{ currentPage + 1 }} of {{ numberOfPages }}</span>
+        }
+      </div>
+
+      <div class="navigationButton">
+        <!-- Page numbers start from 0 -->
+        @if(numberOfPages > (currentPage+1)) {
+        <button
+          mat-flat-button
+          (click)="filterOptions.page = currentPage + 1; getData(true)"
+          color="primary"
+        >
+          Next
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  }
+</div>

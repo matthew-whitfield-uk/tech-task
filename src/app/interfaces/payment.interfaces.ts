@@ -1,4 +1,3 @@
-
 export interface PaymentTransactionOptions {
   createdAtStart?: string;
   createdAtEnd?: string;

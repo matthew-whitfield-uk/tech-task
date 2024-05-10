@@ -1,16 +1,44 @@
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Amount</th>
-      <th>Currency</th>
-      <th>Description</th>
-      <th>Status</th>
-      <th>Created At</th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="transactions">
+  @for (item of tableItems; track item.id) {
 
+  <div class="transaction">
+    <div class="transactionDetails">
+      <div class="transactionDetail">
+        <div class="label">ID</div>
+        <div>{{ item.id }}</div>
+      </div>
 
-  </tbody>
-</table>
+      <div class="transactionDetail">
+        <div class="label">Created</div>
+        <div>{{ item.createdAt | date : "yyyy-MM-dd HH:mm:ss" }}</div>
+      </div>
+
+      <div
+        class="transactionDetail"
+        [ngClass]="{
+         transactionComplete : item.status === 'COMPLETED',
+         transactionFailed : item.status === 'FAILED',
+        }"
+      >
+        <div class="label">Status</div>
+        <div>{{ item.status | titlecase }}</div>
+      </div>
+
+      <div class="transactionDetail">
+        <div class="label">Amount</div>
+        <div>{{ item.amount | currency : item.currency }}</div>
+      </div>
+    </div>
+
+    <div class="transactionDescription">
+      {{ item.description }}
+    </div>
+  </div>
+
+  } @empty {
+
+  <p class="no-items-message">
+    There are no items for this query - try changing the filters
+  </p>
+  }
+</div>
