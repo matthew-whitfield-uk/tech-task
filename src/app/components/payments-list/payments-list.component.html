@@ -56,6 +56,12 @@
     </div>
     }
 
+
+    @if(totalNumberOfItems){
+      <p>{{totalNumberOfItems}} results found</p>
+    }
+
+
     <app-payments-table [tableItems]="tableItems"></app-payments-table>
 
     <div class="navigationOptions">

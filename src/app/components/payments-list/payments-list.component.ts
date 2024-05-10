@@ -21,6 +21,7 @@ export class PaymentsListComponent implements OnInit {
   numberOfPages = 1;
   isWaitingForAPI = false;
   isWaitingForMinimumSpinTime = false;
+  totalNumberOfItems?: number;
 
   filterOptions: PaymentTransactionOptions = {
     page: 0, // API starts pages from 0
@@ -76,6 +77,7 @@ export class PaymentsListComponent implements OnInit {
       next: (response) => {
         this.currentPage = response.currentPage;
         this.numberOfPages = response.numberOfPages;
+        this.totalNumberOfItems = response.totalNumberOfItems;
         this.tableItems = response.items;
         // Reset error state
         this.isError = false;
