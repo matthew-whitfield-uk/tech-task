@@ -54,13 +54,9 @@
     <div class="loadingSpinner">
       <mat-spinner diameter="40"></mat-spinner>
     </div>
+    } @if(totalNumberOfItems){
+    <p>{{ totalNumberOfItems }} results found</p>
     }
-
-
-    @if(totalNumberOfItems){
-      <p>{{totalNumberOfItems}} results found</p>
-    }
-
 
     <app-payments-table [tableItems]="tableItems"></app-payments-table>
 

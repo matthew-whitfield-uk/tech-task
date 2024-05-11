@@ -95,8 +95,8 @@ describe('DataService', () => {
     const request = httpMock.expectOne(
       (req) =>
         req.url === 'http://localhost:8080/api/v1/payments' &&
-        req.params.get('page') === '4' && // Mocked transaction option
-        req.params.get('size') === '5' && // Mocked transaction option
+        req.params.get('page') === '4' &&
+        req.params.get('size') === '5' &&
         req.headers.get('Authorization') === 'Basic ' + btoa('user:userPass')
     );
 

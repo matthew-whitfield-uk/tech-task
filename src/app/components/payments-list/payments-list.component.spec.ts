@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PaymentsTableComponent } from '../payments-table/payments-table.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PaymentsListComponent', () => {
   let component: PaymentsListComponent;
@@ -74,14 +75,14 @@ describe('PaymentsListComponent', () => {
     mockDataService.getPaymentTransactions.and.returnValue(of(mockData));
 
     await TestBed.configureTestingModule({
-      declarations: [PaymentsListComponent, PaymentsTableComponent],
       imports: [
         FormsModule,
         MatSelectModule,
         MatDatepickerModule,
         MatNativeDateModule,
         BrowserAnimationsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        PaymentsListComponent, PaymentsTableComponent, HttpClientModule
       ],
       providers: [
         { provide: DataService, useValue: mockDataService },

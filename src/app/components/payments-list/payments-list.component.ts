@@ -5,8 +5,28 @@ import {
   PaymentTransactionOptions,
 } from 'src/app/interfaces/payment.interfaces';
 import { DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PaymentsTableComponent } from '../payments-table/payments-table.component';
 
 @Component({
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    PaymentsTableComponent,
+  ],
+  providers: [DataService, DatePipe],
   selector: 'app-payments-list',
   templateUrl: './payments-list.component.html',
   styleUrls: ['./payments-list.component.scss'],
@@ -31,6 +51,41 @@ export class PaymentsListComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
   }
+
+  getData(scrollToTop: boolean = false): void {
+    this.isWaitingForAPI = true;
+    this.isWaitingForMinimumSpinTime = true;
+
+    // scroll to the top of the page if navigating pages
+    if (scrollToTop) {
+      window.scrollTo(0, 0);
+    }
+
+    this.dataService.getPaymentTransactions(this.filterOptions).subscribe({
+      next: (response) => {
+        this.currentPage = response.currentPage;
+        this.numberOfPages = response.numberOfPages;
+        this.totalNumberOfItems = response.totalNumberOfItems;
+        this.tableItems = response.items;
+        // Reset error state
+        this.isError = false;
+        this.errorMessage = '';
+        this.isWaitingForAPI = false;
+      },
+      error: (error) => {
+        this.errorMessage = error;
+        this.isError = true;
+        this.isWaitingForAPI = false;
+      },
+    });
+
+    // display the loading spinner for at least 600ms to avoid flicker
+    setTimeout(() => {
+      this.isWaitingForMinimumSpinTime = false;
+    }, 600);
+  }
+
+
 
   filterDate(type: 'createdAtStart' | 'createdAtEnd', date: any): void {
     const formattedDate =
@@ -64,36 +119,4 @@ export class PaymentsListComponent implements OnInit {
     this.getData();
   }
 
-  getData(scrollToTop: boolean = false): void {
-    this.isWaitingForAPI = true;
-    this.isWaitingForMinimumSpinTime = true;
-
-    // scroll to the top of the page if navigating
-    if (scrollToTop) {
-      window.scrollTo(0, 0);
-    }
-
-    this.dataService.getPaymentTransactions(this.filterOptions).subscribe({
-      next: (response) => {
-        this.currentPage = response.currentPage;
-        this.numberOfPages = response.numberOfPages;
-        this.totalNumberOfItems = response.totalNumberOfItems;
-        this.tableItems = response.items;
-        // Reset error state
-        this.isError = false;
-        this.errorMessage = '';
-        this.isWaitingForAPI = false;
-      },
-      error: (error) => {
-        this.errorMessage = error;
-        this.isError = true;
-        this.isWaitingForAPI = false;
-      },
-    });
-
-    // display the loading spinner for at least 600 to avoid flicker
-    setTimeout(() => {
-      this.isWaitingForMinimumSpinTime = false;
-    }, 600);
-  }
 }

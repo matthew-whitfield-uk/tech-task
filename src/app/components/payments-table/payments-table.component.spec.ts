@@ -9,7 +9,7 @@ describe('PaymentsTableComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PaymentsTableComponent]
+      imports: [PaymentsTableComponent]
     });
     fixture = TestBed.createComponent(PaymentsTableComponent);
     component = fixture.componentInstance;
